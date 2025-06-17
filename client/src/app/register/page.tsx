@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Palette, ShoppingBag, User, Mail, Lock, Phone } from 'lucide-react';
+import { Palette, ShoppingBag, User, Mail, Lock, Phone, RouteOffIcon, Router } from 'lucide-react';
 import { toast } from 'sonner';
+import axios from 'axios';
 
 
 interface RegisterFormValues {
@@ -60,14 +61,15 @@ const Register = () => {
     role: 'buyer',
   };
 
-  const handleSubmit = (values: RegisterFormValues) => {
-    console.log('Registration form submitted:', values);
-    toast({
-      title: "Registration Successful!",
-      description: `Welcome to Soulful-Arts, ${values.firstName}! Your ${values.role} account has been created.`,
-    });
-  };
+    const handleSubmit = async(values: typeof initialValues, { setSubmitting }: any) => {
+    const {data}= await  axios.post('http://localhost:8080/register', values)
+    toast(data)
+    // Simulate API call
+    setTimeout(() => {
 
+      setSubmitting(false);
+    }, 1000);
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-burnt-orange-50 via-white to-deep-coral-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
@@ -95,7 +97,7 @@ const Register = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ values, setFieldValue, touched, errors }) => (
+              {({ isSubmitting,values, setFieldValue, touched, errors }) => (
                 <Form className="space-y-6">
                   {/* Role Selection */}
                   <div className="space-y-3">
@@ -277,10 +279,11 @@ const Register = () => {
 
                   {/* Submit Button */}
                   <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-burnt-orange-500 to-deep-coral-500 hover:from-burnt-orange-600 hover:to-deep-coral-600 text-white font-medium py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#F9A51D] hover:bg-orange-700 text-primary-foreground font-semibold py-3 transition-all duration-200 transform hover:scale-[1.02]"
                   >
-                    Create Account
+                    {isSubmitting ? 'Creating Account...' : 'Create Account'}
                   </Button>
 
                   {/* Login Link */}
