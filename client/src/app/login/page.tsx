@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Palette, Mail, Lock, ArrowRight, Link } from 'lucide-react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -18,18 +20,21 @@ const validationSchema = Yup.object({
     .required('Password is required'),
 });
 
-const Login = () => {
+const Register = () => {
   const initialValues = {
     email: '',
     password: '',
   };
+  const router = useRouter()
+  const handleSubmit = async(values: typeof initialValues, { setSubmitting }: any) => {
+    const {data}= await  axios.post('http://localhost:8080/login', values)
+    if(data?.isLoggedIn) router.back();
+    toast(data?.message)
+    // Simulate API call
+    setTimeout(() => {
 
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log('Login form submitted:', values);
-    toast({
-      title: "Login Successful!",
-      description: "Welcome back to Soulful-Arts!",
-    });
+      setSubmitting(false);
+    }, 1000);
   };
 
   return (
