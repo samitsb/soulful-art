@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button } from '@/components/ui/button';
@@ -8,8 +8,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Palette, Mail, Lock, ArrowRight, Link } from 'lucide-react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/router';
+
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { addLoginDetails } from '@/redux/reducerslices/userSlice';
+import { useRouter } from 'next/router';
+
+
+
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -20,21 +26,36 @@ const validationSchema = Yup.object({
     .required('Password is required'),
 });
 
-const Register = () => {
+const login = () => {
+   const { isLoggedIn } = useSelector((state: any) => state.user);
+  useEffect(()=>{
+    if(isLoggedIn) router.push('/')
+  },[])
+
+
   const initialValues = {
     email: '',
     password: '',
   };
   const router = useRouter()
+  const dispatch = useDispatch()
   const handleSubmit = async(values: typeof initialValues, { setSubmitting }: any) => {
     const {data}= await  axios.post('http://localhost:8080/login', values)
-    if(data?.isLoggedIn) router.back();
+    if(data?.isLoggedIn) {
+      if (data.user.role === 'admin'){
+        router.push('/admin/dashboard')
+      }else if (data.user.role === 'seller'){
+        router.push('/seller/dashboard')
+      }
+      else{
+      router.back()
+      }
+    }
     toast(data?.message)
-    // Simulate API call
-    setTimeout(() => {
-
-      setSubmitting(false);
-    }, 1000);
+    if(data) {
+      dispatch(addLoginDetails(data))
+    }
+    
   };
 
   return (
@@ -147,4 +168,4 @@ const Register = () => {
   );
 };
 
-export default Login;
+export default login ;

@@ -6,7 +6,7 @@ const initialState ={
     isLoggedIn : false,
     location:''
 }
-export const boxSlice = createSlice({
+export const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
@@ -28,9 +28,6 @@ export const boxSlice = createSlice({
     
   }
 })
-export const { incrementHeight, 
-  incrementWidth, changeColor,
-  incrementMarginLeft,
-  changeToCircle } = boxSlice.actions
+export const { logoutUser,addLoginDetails } = userSlice.actions
 
-export default boxSlice.reducer
+export default userSlice.reducer
