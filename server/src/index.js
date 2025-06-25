@@ -2,7 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import connect from './db/connect.js'
 import UserRouter from './routes/user.js'
-const port = 8080
+import dotnev from 'dotenv'
+dotnev.config()
+
+const port = process.env.PORT
 const app = express()
 
 connect()

@@ -12,7 +12,8 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addLoginDetails } from '@/redux/reducerslices/userSlice';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+
 
 
 
@@ -40,7 +41,7 @@ const login = () => {
   const router = useRouter()
   const dispatch = useDispatch()
   const handleSubmit = async(values: typeof initialValues, { setSubmitting }: any) => {
-    const {data}= await  axios.post('http://localhost:8080/login', values)
+    const {data}= await  axios.post(process.env.NEXT_PUBLIC_API_URL+'/login', values)
     if(data?.isLoggedIn) {
       if (data.user.role === 'admin'){
         router.push('/admin/dashboard')
@@ -74,8 +75,8 @@ const login = () => {
 
         <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-6">
-            <CardTitle className="text-2xl font-bold text-gray-800">Sign In</CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardTitle className="text-2xl font-bold text-gray-800">Log In</CardTitle>
+            <CardDescription className="text-gray-600"> 
               Continue your artistic journey
             </CardDescription>
           </CardHeader>
@@ -86,7 +87,7 @@ const login = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ values, errors, touched }) => (
+              {({ values, errors, touched,isSubmitting }) => (
                 <Form className="space-y-6">
                   {/* Email Field */}
                   <div className="space-y-2">
@@ -139,12 +140,12 @@ const login = () => {
                   </div>
 
                   {/* Submit Button */}
-                  <Button
+                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-burnt-orange-500 to-deep-coral-500 hover:from-burnt-orange-600 hover:to-deep-coral-600 text-white py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#F9A51D] hover:bg-orange-700 text-primary-foreground font-semibold py-3 transition-all duration-200 transform hover:scale-[1.02]"
                   >
-                    Sign In
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    {isSubmitting ? 'Creating Account...' : 'Sign In'}
                   </Button>
 
                   {/* Register Link */}

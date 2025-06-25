@@ -3,6 +3,7 @@ import User from "../models/user.js"
 const UserRouter = Router()
 import bcrypt from "bcrypt"
 const saltRounds = 10
+import jwt from 'jsonwebtoken'
 
 UserRouter.post('/register',async (req,res)=>{
     const user = await User.findOne({email : req.body.email})
@@ -23,5 +24,15 @@ UserRouter.post ('/login',async(req, res)=>{
   if(!user) return res.send({message:'Email not found'})
     //yes:
   //check if password matches to that of db
+  const isMatched =await bcrypt.compare(password, user.password)
+  if(!isMatched) return res.send({message:'Invalid password'})
+  
+  const token = await jwt.sign({email: email},process.env.JWT_SECRET);
+  
+  return res.send({
+    message:'logged in successfully',
+    User: user ,
+    token
+  })
 })
 export default UserRouter;

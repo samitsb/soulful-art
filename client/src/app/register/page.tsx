@@ -62,7 +62,7 @@ const Register = () => {
   };
 
     const handleSubmit = async(values: typeof initialValues, { setSubmitting }: any) => {
-    const {data}= await  axios.post('http://localhost:8080/register', values)
+    const {data}= await  axios.post(process.env.NEXT_PUBLIC_API_URL+'/register', values)
     toast(data)
     // Simulate API call
     setTimeout(() => {
@@ -71,7 +71,7 @@ const Register = () => {
     }, 1000);
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-burnt-orange-50 via-white to-deep-coral-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#FF6F61] via-white to-[#CC5500] flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
