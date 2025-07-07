@@ -1,4 +1,4 @@
-import { NavigationMenuDemo } from '@/components/navbar'
+import { NavigationMenuDemo } from '@/components/ui/navbar'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import React from 'react'
